@@ -1,58 +1,145 @@
-# This is a sample Python script.
+# Вводятся моды 2 предметов
+# указываются желаемые моды  в 1 и 2 предмете
+#
+#
+#
+# Условия налагаемые на вводимые данные:
+# В предметах от 0 до 3 модов
+# в предметах от 0 до 2 желаемых модов
+#
+# Генерируем 3 списка модов:
+# - 3 мода
+# - 2 мода
+# - 1 мод
+#
+# Считаем общее число !разных! желаемых модов - desired_mod_count
+# считаем число комбинаций для желаемых модов, количество модов от 1 до max(3,desired_mod_count)
+# И генерируем их список
+#
+#
+# Для каждого из элементов списка считаем количество генераций и с учетом веса по числу модов выводим шансы на получение
+#
+#
+# Одинаковые моды блокируют друг друга ( то есть в конечный предмет может попасть только 1 из них)
+# Одинаковые моды могут иметь разные тиры (и соответственно "желаемым" может быть только 1 из них)
+#
+#
+# Генерируем список модов
+#
+#
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+#    """Read list of mods for recombinator
+#    and setup which of them good   """
 
+# Initialisation:
+# 0 elem - 0 mod chance, 1 elem - 1 mod chance, 2 elem - 2 mod chance, 3 elem - 3 mod chance
+prob = []
+prob += [1, 0, 0, 0]  # 0 mods
+prob += [1 / 3, 2 / 3, 0, 0]  # 1 mod
+prob += [0, 2 / 3, 1 / 3, 0]  # 2 mods
+prob += [0, 0.3, 0.5, 0.2]  # 3 mods
+prob += [0, 0.1, 0.55, 0.35]  # 4 mods
+prob += [0, 0, 0.5, 0.5]  # 5 mods
+prob += [0, 0, 0.3, 0.7]  # 6 mods
 
-# def calc_chance_recombine (mods_1 , mods_2, needed_mods1, needed_mods_2 ):
-#    mods = mods_1 + mods_2
-#    for mod_counter in mods:
-#        for counter in range(mod_counter,len(mods)+1):            if mods
-
-# Press the green button in the gutter to run the script.
-# input data
-
-def read_mods():
-    """Read list of mods for recombinator
-    and setup which of them good
-    """
-    mods1 = int(input('Сколько модов на 1 предмете: '))
-    i = 0
-    while i < mods1:
-        i += 1
-        mod_list1 += [input('Введите ' + str(i) + ' мод: ')]
-        tier_mod1 += [input('Это нужный мод? [y/n]: ')]
-    pass
-
-
+list3mod = []
+list2mod = []
+list1mod = []
 
 mod_list1 = []
 mod_list2 = []
 tier_mod1 = []
 tier_mod2 = []
+mods1 = []
+mods2 = []
+# End Initialisation
+#
+# Input DATA:
 print('Первый предмет')
-mods1 = int(input('Сколько модов на 1 предмете: '))
+count = int(input('Сколько модов на 1 предмете: '))
 i = 0
-while i < mods1:
+while i < count:
     i += 1
-    mod_list1 += [input('Введите '+str(i)+' мод: ')]
+    mod_list1 += [input('Введите ' + str(i) + ' мод: ')]
     tier_mod1 += [input('Это нужный мод? [y/n]: ')]
 print('Второй предмет')
-mods2 = int(input('Сколько модов на 2 предмете: '))
+count = int(input('Сколько модов на 2 предмете: '))
 i = 0
-while i < mods2:
+while i < count:
     i += 1
-    mod_list2 += [input('Введите '+str(i)+' мод: ')]
+    mod_list2 += [input('Введите ' + str(i) + ' мод: ')]
     tier_mod2 += [input('Это нужный мод? [y/n]: ')]
+mods1 = [0] * len(mod_list1)
+mods2 = [0] * len(mod_list2)
+#
+# End Input DATA
+#
 
-print('моды 1 предмета ', mod_list1)
-print('Хорошие моды 1 предмета')
 i = 0
-while i < len(mod_list1):
-    if tier_mod1[i] == 'y':
-        print(mod_list1[i])
-    i += 1
-print('моды 2 предмета ', mod_list2)
+# приводим список модов удобному виду:
 
+while i < len(mods1):
+    j = 0
+    i += 1
+    if tier_mod1[i - 1] == 'n':
+        mods1[i - 1] = i
+    elif tier_mod1[i - 1] == 'y':
+        mods1[i - 1] = -i
+    else:
+        print("error: wrong desired flag in 1 item")
+    while j < len(mods2):
+        if mod_list1[i - 1] == mod_list2[j] and tier_mod2[j] == 'n':
+            mods2[j] = i
+        elif mod_list1[i - 1] == mod_list2[j] and tier_mod2[j] == 'y':
+            mods2[j] = -i
+        j += 1
+
+j = 0
+while j < len(mods2):
+    if mods2[j] == 0:
+        i += 1
+        if tier_mod2[j] == 'y':
+            mods2[j] = -i
+        else:
+            mods2[j] = i
+    j += 1
+# /Приводим данные к удобному виду
+
+#
+#  Создаем общий пулл модов:
+pull = mods1 + mods2
+#
+# Работаем с набором вероятностей prob[len(pull)]
+# Генерируем списки преметов с 3, 2 и 1 модом
+
+i = 0
+while i < len(pull):
+    j = i + 1
+    while j < len(pull):
+        k = j + 1
+        if abs(pull[i]) == abs(pull[j]):
+            j += 1
+            continue
+        while k < len(pull):
+            if (abs(pull[i]) == abs(pull[k])) or (abs(pull[j]) == abs(pull[k])):
+                k += 1
+                continue
+            list3mod += [pull[i], pull[j], pull[k]]
+            k += 1
+        j += 1
+    i += 1
+for i in range(0, len(list3mod), 3):
+    print('[', list3mod[i], list3mod[i + 1], list3mod[i + 2], ']')
+#
+#
+#
+#
+#
+#
+#
+
+
+print(mods1)
+print(mods2)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
