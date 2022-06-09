@@ -151,26 +151,32 @@ while i < len(pull):
     list1mod += [pull[i]]
     i += 1
 
-# тестовый вывод всех 3-модовых комбинаций
-print('3 mod items')
-for i in range(0, len(list3mod), 3):
-    print('[', list3mod[i], list3mod[i + 1], list3mod[i + 2], ']')
-print('2 mod items')
-for i in range(0, len(list2mod), 2):
-    print('[', list2mod[i], list2mod[i + 1], ']')
-print('1 mod items')
-print(list1mod)
-#
-#
-#
-#
-#
-#
-#
 
-print('base items')
-print(mods1)
-print(mods2)
+def print_generated_items():
+    # тестовый вывод всех 3-модовых комбинаций
+    print('3 mod items')
+    for ind in range(0, len(list3mod), 3):
+        print('[', list3mod[ind], list3mod[ind + 1], list3mod[ind + 2], ']')
+    print('2 mod items')
+    for ind in range(0, len(list2mod), 2):
+        print('[', list2mod[ind], list2mod[ind + 1], ']')
+    print('1 mod items')
+    print(list1mod)
+
+
+#
+#
+#
+#
+#
+#
+#
+def print_base_items():
+    print('base items')
+    print(mods1)
+    print(mods2)
+
+
 desired_pull = []
 # create list of unique desired mods
 for i in range(len(pull)):
@@ -178,14 +184,21 @@ for i in range(len(pull)):
         if pull[i] not in desired_pull:
             desired_pull += [pull[i]]
 
-print('list of desired mods')
-print(desired_pull)
+
+def print_desired_mods():
+    print('list of desired mods')
+    print(desired_pull)
+
 
 # choose probability
 weights = []
 for i in range(4):
     weights += [prob[len(pull) * 4 + i]]
-print(weights)
+
+
+def print_weights():
+    print(weights)
+
 
 # calculate all event probabilities:
 # 3 desired (3 mods)
@@ -201,18 +214,10 @@ prob_desired13 = 0
 desired03 = 0
 prob_desired03 = 0
 
-
-desired22 = 0
-desired12 = 0
-desired02 = 0
-
-desired11 = 0
-desired01 = 0
-
 for i in range(0, len(list3mod), 3):
     if (list3mod[i] < 0) and (list3mod[i + 1] < 0) and (list3mod[i + 2] < 0):
         desired33 += 1
-    elif (list3mod[i]) * (list3mod[i+1]) * (list3mod[i+2]) < 0:
+    elif (list3mod[i]) * (list3mod[i + 1]) * (list3mod[i + 2]) < 0:
         desired13 += 1
     elif (list3mod[i] > 0) and (list3mod[i + 1] > 0) and (list3mod[i + 2] > 0):
         desired03 += 1
@@ -223,18 +228,73 @@ prob_desired23 = desired23 / (len(list3mod) / 3)
 prob_desired13 = desired13 / (len(list3mod) / 3)
 prob_desired03 = desired03 / (len(list3mod) / 3)
 
-print('статистика 3 мода')
-print('total generations', len(list3mod)/3, 'chance for 3 mods', weights[3]*100, 'percent')
-print('3 desired mod cases', desired33, 'probability = ', round(weights[3]*prob_desired33*100), 'percent')
-print('2 desired mod cases', desired23, 'probability = ', round(weights[3]*prob_desired23*100), 'percent')
-print('1 desired mod cases', desired13, 'probability = ', round(weights[3]*prob_desired13*100), 'percent')
-print('0 desired mod cases', desired03, 'probability = ', round(weights[3]*prob_desired03*100), 'percent')
+print('statistics 3 mods')
+print('total generations', len(list3mod) / 3, 'chance for 3 mods', round(weights[3] * 100), 'percent')
+print('3 desired mod cases', desired33, 'probability = ', round(weights[3] * prob_desired33 * 100), 'percent')
+print('2 desired mod cases', desired23, 'probability = ', round(weights[3] * prob_desired23 * 100), 'percent')
+print('1 desired mod cases', desired13, 'probability = ', round(weights[3] * prob_desired13 * 100), 'percent')
+print('0 desired mod cases', desired03, 'probability = ', round(weights[3] * prob_desired03 * 100), 'percent')
+print('**************************************************************************************************************'
+      '*************')
 # 0 desired (3 mods)
+
+
 # 2 desired (2 mods)
 # 1 desired (2 ods)
 # 0 desired (2 mods)
+
+
+desired22 = 0
+desired12 = 0
+desired02 = 0
+prob_desired22 = 0
+prob_desired12 = 0
+prob_desired02 = 0
+
+for i in range(0, len(list2mod), 2):
+    if (list2mod[i] < 0) and (list2mod[i + 1] < 0):
+        desired22 += 1
+    elif (list2mod[i] < 0) or (list2mod[i + 1] < 0):
+        desired12 += 1
+    else:
+        desired02 += 1
+
+prob_desired22 = desired22 / (len(list2mod) / 2)
+prob_desired12 = desired12 / (len(list2mod) / 2)
+prob_desired02 = desired02 / (len(list2mod) / 2)
+
+print('statistics 2 mods')
+print('total generations', len(list2mod) / 2, 'chance for 2 mods', round(weights[2] * 100), 'percent')
+print('2 desired mod cases', desired22, 'probability = ', round(weights[2] * prob_desired22 * 100), 'percent')
+print('1 desired mod cases', desired12, 'probability = ', round(weights[2] * prob_desired12 * 100), 'percent')
+print('0 desired mod cases', desired02, 'probability = ', round(weights[2] * prob_desired02 * 100), 'percent')
+print('**************************************************************************************************************'
+      '*************')
 # 1 desired (1 mod)
 # 0 desired (1 mod)
+
+desired11 = 0
+desired01 = 0
+prob_desired11 = 0
+prob_desired01 = 0
+
+for i in range(len(list1mod)):
+    if list1mod[i] < 0:
+        desired11 += 1
+    else:
+        desired01 += 1
+
+prob_desired11 = desired11 / (len(list1mod))
+prob_desired01 = desired01 / (len(list1mod))
+
+print('statistics 2 mods')
+print('total generations', len(list1mod), 'chance for 2 mods', round(weights[1] * 100), 'percent')
+print('1 desired mod cases', desired11, 'probability = ', round(weights[1] * prob_desired11 * 100), 'percent')
+print('0 desired mod cases', desired01, 'probability = ', round(weights[1] * prob_desired01 * 100), 'percent')
+print('**************************************************************************************************************'
+      '*************')
+print('total chance for 0 mods', round(weights[0] * 100), 'percent')
+
 # 0 mods
 
 
