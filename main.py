@@ -112,6 +112,9 @@ pull = mods1 + mods2
 # Работаем с набором вероятностей prob[len(pull)]
 # Генерируем списки преметов с 3, 2 и 1 модом
 
+
+# C 3 модами:
+
 i = 0
 while i < len(pull):
     j = i + 1
@@ -128,8 +131,37 @@ while i < len(pull):
             k += 1
         j += 1
     i += 1
+
+
+# C 2 модами:
+
+i = 0
+while i < len(pull):
+    j = i + 1
+    while j < len(pull):
+        if abs(pull[i]) == abs(pull[j]):
+            j += 1
+            continue
+        list2mod += [pull[i], pull[j]]
+        j += 1
+    i += 1
+
+# с 1 модом
+i = 0
+while i < len(pull):
+    list1mod += [pull[i]]
+    i += 1
+
+
+# тестовый вывод всех 3-модовых комбинаций
+print('3 mod items')
 for i in range(0, len(list3mod), 3):
     print('[', list3mod[i], list3mod[i + 1], list3mod[i + 2], ']')
+print('2 mod items')
+for i in range(0, len(list2mod), 2):
+    print('[', list2mod[i], list2mod[i + 1], ']')
+print('1 mod items')
+print(list1mod)
 #
 #
 #
@@ -138,8 +170,16 @@ for i in range(0, len(list3mod), 3):
 #
 #
 
-
+print('base items')
 print(mods1)
 print(mods2)
+desired_pull = []
+# create list of unique desired mods
+for i in range(len(pull)):
+    if pull[i] < 0:
+        if pull[i] not in desired_pull:
+            desired_pull += [pull[i]]
 
+print('list of desired mods')
+print(desired_pull)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
