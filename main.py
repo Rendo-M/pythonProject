@@ -132,7 +132,6 @@ while i < len(pull):
         j += 1
     i += 1
 
-
 # C 2 модами:
 
 i = 0
@@ -151,7 +150,6 @@ i = 0
 while i < len(pull):
     list1mod += [pull[i]]
     i += 1
-
 
 # тестовый вывод всех 3-модовых комбинаций
 print('3 mod items')
@@ -182,4 +180,62 @@ for i in range(len(pull)):
 
 print('list of desired mods')
 print(desired_pull)
+
+# choose probability
+weights = []
+for i in range(4):
+    weights += [prob[len(pull) * 4 + i]]
+print(weights)
+
+# calculate all event probabilities:
+# 3 desired (3 mods)
+# 2 desired (3 mods)
+# 1 desired (3 mds)
+
+desired33 = 0
+prb_desired33 = 0
+desired23 = 0
+prob_desired23 = 0
+desired13 = 0
+prob_desired13 = 0
+desired03 = 0
+prob_desired03 = 0
+
+
+desired22 = 0
+desired12 = 0
+desired02 = 0
+
+desired11 = 0
+desired01 = 0
+
+for i in range(0, len(list3mod), 3):
+    if (list3mod[i] < 0) and (list3mod[i + 1] < 0) and (list3mod[i + 2] < 0):
+        desired33 += 1
+    elif (list3mod[i]) * (list3mod[i+1]) * (list3mod[i+2]) < 0:
+        desired13 += 1
+    elif (list3mod[i] > 0) and (list3mod[i + 1] > 0) and (list3mod[i + 2] > 0):
+        desired03 += 1
+    else:
+        desired23 += 1
+prob_desired33 = desired33 / (len(list3mod) / 3)
+prob_desired23 = desired23 / (len(list3mod) / 3)
+prob_desired13 = desired13 / (len(list3mod) / 3)
+prob_desired03 = desired03 / (len(list3mod) / 3)
+
+print('статистика 3 мода')
+print('total generations', len(list3mod)/3, 'chance for 3 mods', weights[3]*100, 'percent')
+print('3 desired mod cases', desired33, 'probability = ', round(weights[3]*prob_desired33*100), 'percent')
+print('2 desired mod cases', desired23, 'probability = ', round(weights[3]*prob_desired23*100), 'percent')
+print('1 desired mod cases', desired13, 'probability = ', round(weights[3]*prob_desired13*100), 'percent')
+print('0 desired mod cases', desired03, 'probability = ', round(weights[3]*prob_desired03*100), 'percent')
+# 0 desired (3 mods)
+# 2 desired (2 mods)
+# 1 desired (2 ods)
+# 0 desired (2 mods)
+# 1 desired (1 mod)
+# 0 desired (1 mod)
+# 0 mods
+
+
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
